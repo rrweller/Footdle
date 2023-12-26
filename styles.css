@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'VALORANT Font', sans-serif;
     text-align: center;
     margin: 0;
     padding: 20px;
@@ -7,8 +7,8 @@ body {
 }
 
 h1 {
-    font-size: 2.5em;
-    color: #333;
+    font-size: 5em;
+    color: #fd4655;
 }
 
 #gameArea {
@@ -72,3 +72,11 @@ h1 {
         font-size: 2em; /* Smaller font size for smaller screens */
     }
 }
+
+@font-face {
+    font-family: 'VALORANT Font';
+    src: url('Valorant Font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
