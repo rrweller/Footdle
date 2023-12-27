@@ -1,30 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     const agentGrid = document.getElementById('agentGrid');
     const agentSound = document.getElementById('agentSound');
+    const submitButton = document.getElementById('submitGuess');
     let selectedAgent = '';
-    const strikeContainer = document.getElementById('strikeContainer');
     let strikes = 0;
     const maxStrikes = 5;
-    const submitButton = document.getElementById('submitGuess');
 
-    // Function to create agent elements
-    //const loadAgents = () => {
-        //console.log(agents);
-        //Object.keys(agents).forEach(agentName => {
-            //const agentElem = document.createElement('img');
-            //agentElem.src = `static/agents/${agentName}/${agentName}.png`;
-            //agentElem.alt = agentName;
-            //agentElem.classList.add('agent');
-            //agentElem.addEventListener('click', () => selectAgent(agentName));
-            //agentGrid.appendChild(agentElem);
-        //});
-    //};
+    // Helper function to get cookie by name
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
-    agentGrid.addEventListener('click', (event) => {
+    // Get cookie values
+    const quizTakenCookieValue = getCookie('quizTaken');
+    const strikesCookieValue = getCookie('strikes');
+
+    // Agent click handler
+    const handleAgentClick = (event) => {
         if (event.target.tagName === 'IMG' && event.target.classList.contains('agent')) {
             selectAgent(event.target.alt);
         }
-    });
+    };
+    agentGrid.addEventListener('click', handleAgentClick);
 
     // Function to play the sound file for the current guess
     const playSound = (guessNumber) => {
@@ -43,18 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to handle agent selection
     const selectAgent = (name) => {
-        // Remove the 'selected' class from all agents
-        document.querySelectorAll('.agent').forEach(agent => {
-            agent.classList.remove('selected');
-        });
-        
-        // Add the 'selected' class to the clicked agent
         const selectedElem = document.querySelector(`img[alt="${name}"]`);
-        if (selectedElem) {
+        // Check if the agent has already been guessed incorrectly
+        if (selectedElem && !selectedElem.classList.contains('greyscale')) {
+            document.querySelectorAll('.agent').forEach(agent => {
+                agent.classList.remove('selected');
+            });
             selectedElem.classList.add('selected');
             selectedAgent = name;
         }
-    };
+    };    
 
     // Function to update strike indicators
     const updateStrikes = (isCorrect) => {
@@ -64,41 +61,118 @@ document.addEventListener('DOMContentLoaded', () => {
         strikeElems[strikes].classList.add(isCorrect ? 'right' : 'wrong');
     };
 
-    // Event listener for the submit button
     submitButton.addEventListener('click', () => {
-        const correctAgent = dailyAgent;
-        console.log("Strikes are now ", strikes);
         if (selectedAgent) {
+            const correctAgent = dailyAgent;
             if (selectedAgent === correctAgent) {
                 updateStrikes(true);
-                alert('YOU WIN!');
-                endGame();
+                endGame(true, strikes + 1);
             } else {
                 updateStrikes(false);
-                document.querySelector(`img[alt="${selectedAgent}"]`).classList.add('greyscale');
-                playSound(strikes+1);
+                const selectedElem = document.querySelector(`img[alt="${selectedAgent}"]`);
+                selectedElem.classList.add('greyscale'); // Mark as guessed and greyed out
+                selectedElem.classList.remove('selected'); // Deselect the agent
+                selectedAgent = ''; // Clear the selected agent variable
+                playSound(strikes + 1);
                 strikes++;
                 if (strikes >= maxStrikes) {
-                    alert('Game Over!');
-                    endGame();
+                    endGame(false, strikes);
                 }
             }
         } else {
             alert('Please select an agent before submitting.');
         }
-    });
+    });    
 
-    // Function to end the game
-    const endGame = () => {
-        submitButton.disabled = true;  // Disable the submit button
-        // Optional: You can also disable all agent images to prevent further selections
+    const endGame = (won = false, attempts = 0) => {
+        submitButton.disabled = true;
         document.querySelectorAll('.agent').forEach(agent => {
-            agent.removeEventListener('click');
+            agent.removeEventListener('click', handleAgentClick);
             agent.style.pointerEvents = 'none';
         });
+    
+        // Use the same logic as in updateCountdown to calculate the exact expiration time
+        const serverTimeElement = document.getElementById('serverTime');
+        const serverTime = new Date(serverTimeElement.innerText);
+        
+        const nextQuizTime = new Date(serverTime);
+        nextQuizTime.setDate(serverTime.getDate() + 1);
+        nextQuizTime.setHours(0, 0, 0, 0);
+
+        // Set the cookie with the game result and attempts to expire at the next quiz time
+        document.cookie = `quizTaken=${won ? 'won' : 'lost'}; expires=${nextQuizTime.toUTCString()}; path=/`;
+        document.cookie = `strikes=${attempts}; expires=${nextQuizTime.toUTCString()}; path=/`;
+    
+        // Show the result modal
+        const resultModal = document.getElementById('resultModal');
+        const resultMessage = document.getElementById('resultMessage');
+        const nextQuizMessage = document.getElementById('nextQuizMessage');
+        
+        resultMessage.textContent = won ? 'Congratulations, you won!' : 'Game Over, try again tomorrow!';
+        // Update the attemptMessage text content to show the number of attempts from the parameter
+        nextQuizMessage.textContent = `Next quiz available in 24 hours.`;
+        
+        resultModal.style.display = "block";
+        createModalStrikes(attempts, won);
     };
 
-    // Assuming 'agents' is a global variable injected by Flask containing agent names
-    //loadAgents();
+    if (quizTakenCookieValue) {
+        endGame(quizTakenCookieValue === 'won', parseInt(strikesCookieValue));
+    }
+
+    // Moved updateCountdown into script.js
+    function updateCountdown() {
+        const serverTimeElement = document.getElementById('serverTime');
+        const serverTime = new Date(serverTimeElement.innerText);
+    
+        const nextQuizTime = new Date(serverTime);
+        nextQuizTime.setDate(serverTime.getDate() + 1);
+        nextQuizTime.setHours(0, 0, 0, 0);
+    
+        const now = new Date();
+        const diff = nextQuizTime - now;
+    
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+    
+        document.getElementById('timeLeft').innerText = `${hours}h ${minutes}m ${seconds}s`;
+
+        // Set the cookie expiration to match the next quiz time
+        document.cookie = `quizAvailable=${nextQuizTime.toUTCString()}; expires=${nextQuizTime.toUTCString()}; path=/`;
+
+        // If there is a modal on the page, update its countdown as well
+        const nextQuizMessage = document.getElementById('nextQuizMessage');
+        if (nextQuizMessage) {
+            nextQuizMessage.textContent = `Time until next quiz: ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+
+    function createModalStrikes(attempts, won) {
+        const modalStrikeContainer = document.getElementById('modalStrikeContainer');
+        modalStrikeContainer.innerHTML = ''; // Clear previous strikes if any
+        
+        for (let i = 0; i < maxStrikes; i++) {
+            const strikeElem = document.createElement('div');
+            strikeElem.classList.add('strike');
+            if (i < attempts - 1) { // All attempts except the last one are wrong
+                strikeElem.classList.add('wrong');
+                strikeElem.textContent = '✖';
+            } else if (i === attempts - 1 && won) { // Last attempt is right if the user won
+                strikeElem.classList.add('right');
+                strikeElem.textContent = '✓';
+            } else if (i === attempts - 1 && !won) { // Last attempt is wrong if the user lost
+                strikeElem.classList.add('wrong');
+                strikeElem.textContent = '✖';
+            } else {
+                strikeElem.classList.add('empty'); // Remaining strikes are empty
+            }
+            modalStrikeContainer.appendChild(strikeElem);
+        }
+    }    
+
     playSound(0);
+    // Call updateCountdown initially and then set it to update every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 });
