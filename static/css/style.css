@@ -25,17 +25,18 @@ h2 {
 }
 
 #gameArea {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
+    display: grid;
+    max-width: 50%;
+    min-width: 75%;
+    margin: auto;
+    grid-template-columns: 75% 25%;
+    align-items: stretch;
     gap: 20px;
     padding: 20px;
 }
 
 #mediaContainer {
     flex: 1;
-    max-width: 50%;
     border: 12px solid #fd4655; /* Add border to media container */
     padding: 10px; /* Optional padding for visual appeal */
 }
@@ -48,7 +49,7 @@ h2 {
 
 #agentGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     justify-content: center;
     border: 6px solid #fd4655; /* Add border to agent grid */
@@ -61,6 +62,8 @@ h2 {
     object-fit: cover;
     cursor: pointer;
     border: 2px solid transparent;
+    justify-content: center;
+    align-items: center;
     border-radius: 5px;
 }
 
@@ -109,17 +112,23 @@ h2 {
     margin-top: 20px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     #gameArea {
+        display: flex;
+        flex-wrap: wrap;
         flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
     }
 
     #mediaContainer {
-        max-width: 100%;
+        border: 6px solid #fd4655;
     }
 
     #agentGrid {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(7, 1fr);
+        border: 3px solid #fd4655;
+        max-width: 95%;
     }
 
     h1 {
