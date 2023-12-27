@@ -27,6 +27,13 @@
             {% endfor %}
         </div>        
     </div>
+    <div id="strikeContainer">
+        <div class="strike empty"></div>
+        <div class="strike empty"></div>
+        <div class="strike empty"></div>
+        <div class="strike empty"></div>
+        <div class="strike empty"></div>
+    </div>
     <button id="submitGuess">Submit Guess</button>
     <script>
         var agents = JSON.parse('{{agents | tojson}}');

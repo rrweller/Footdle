@@ -1,20 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const agentGrid = document.getElementById('agentGrid');
+    const strikeContainer = document.getElementById('strikeContainer');
     let selectedAgent = '';
+    let strikes = 0;
+    const maxStrikes = 5; // Maximum number of wrong guesses
     const submitButton = document.getElementById('submitGuess');
 
     // Function to create agent elements
-    const loadAgents = () => {
-        console.log(agents);
-        Object.keys(agents).forEach(agentName => {
-            const agentElem = document.createElement('img');
-            agentElem.src = `static/agents/${agentName}/${agentName}.png`;
-            agentElem.alt = agentName;
-            agentElem.classList.add('agent');
-            agentElem.addEventListener('click', () => selectAgent(agentName));
-            agentGrid.appendChild(agentElem);
-        });
-    };
+    //const loadAgents = () => {
+        //console.log(agents);
+        //Object.keys(agents).forEach(agentName => {
+            //const agentElem = document.createElement('img');
+            //agentElem.src = `static/agents/${agentName}/${agentName}.png`;
+            //agentElem.alt = agentName;
+            //agentElem.classList.add('agent');
+            //agentElem.addEventListener('click', () => selectAgent(agentName));
+            //agentGrid.appendChild(agentElem);
+        //});
+    //};
 
     agentGrid.addEventListener('click', (event) => {
         if (event.target.tagName === 'IMG' && event.target.classList.contains('agent')) {
@@ -37,24 +40,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Function to update strike indicators
+    const updateStrikes = (isCorrect) => {
+        const strikeElems = document.querySelectorAll('.strike');
+        strikeElems[strikes].classList.remove('empty');
+        strikeElems[strikes].innerHTML = isCorrect ? '✓' : '✖';
+        strikeElems[strikes].classList.add(isCorrect ? 'right' : 'wrong');
+    };
+
     // Event listener for the submit button
     submitButton.addEventListener('click', () => {
         const correctAgent = document.getElementById('dailyAgent').getElementsByTagName('img')[0].alt;
         if (selectedAgent) {
-            console.log('Selected agent:', selectedAgent);
-            console.log('Correct agent: ', correctAgent);
             if (selectedAgent === correctAgent) {
-                console.log('YOU WIN!');
+                updateStrikes(true);
                 alert('YOU WIN!'); // Or update the DOM with a winning message
+                endGame(); // Call endGame function
             } else {
-                console.log('Try again!');
-                alert('Try again!'); // Or update the DOM with a try again message
+                updateStrikes(false);
+                document.querySelector(`img[alt="${selectedAgent}"]`).classList.add('greyscale');
+                strikes++;
+                if (strikes >= maxStrikes) {
+                    alert('Game Over!'); // Or update the DOM with a game over message
+                    endGame(); // Call endGame function
+                }
             }
         } else {
             alert('Please select an agent before submitting.');
         }
     });
 
+    // Function to end the game
+    const endGame = () => {
+        submitButton.disabled = true;  // Disable the submit button
+        // Optional: You can also disable all agent images to prevent further selections
+        document.querySelectorAll('.agent').forEach(agent => {
+            agent.removeEventListener('click');
+            agent.style.pointerEvents = 'none';
+        });
+    };
+
     // Assuming 'agents' is a global variable injected by Flask containing agent names
-    loadAgents();
+    //loadAgents();
 });
