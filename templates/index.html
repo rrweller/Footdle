@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOTDLE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>FOOTDLE</h1>
+    <div id="dailyAgent">
+        <img src="{{ url_for('static', filename='agents/' + daily_agent + '/' + agents[daily_agent]) }}" alt="{{ daily_agent }}">
+    </div>
+    <h2>GameArea</h2>
+    <div id="gameArea">
+        <div id="mediaContainer">
+            <!-- Placeholder for image or video -->
+            <img id="gameImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Guess the Agent">
+            <audio id="agentFootsteps" controls>
+                <source src="{{ url_for('static', filename='sound1.mp3') }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <div id="agentGrid">
+            {% for agent_name, image_file in agents.items() %}
+                <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + image_file) }}" alt="{{ agent_name }}">
+            {% endfor %}
+        </div>        
+    </div>    
+    <button id="submitGuess">Submit Guess</button>  
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>    
+</body>
+</html>

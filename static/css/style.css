@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'VALORANT Font';
+    src: url('Valorant Font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    color: #ffffff;
+    background-color: #121826;
+}
+
+h1 {
+    font-family: 'VALORANT Font', sans-serif;
+    font-size: 7em;
+    color: #fd4655;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+#gameArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+#mediaContainer {
+    flex: 1;
+    max-width: 60%;
+}
+
+#mediaContainer img,
+#mediaContainer audio {
+    width: 100%;
+    height: auto;
+}
+
+#agentGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 10px;
+    justify-content: center;
+}
+
+.agent {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 5px;
+}
+
+.agent.selected {
+    border: 2px solid #007bff;
+}
+
+#submitGuess {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    #gameArea {
+        flex-direction: column;
+    }
+
+    #mediaContainer {
+        max-width: 100%;
+    }
+
+    #agentGrid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+}
