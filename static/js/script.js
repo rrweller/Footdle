@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const agentGrid = document.getElementById('agentGrid');
-    const strikeContainer = document.getElementById('strikeContainer');
+    const agentSound = document.getElementById('agentSound');
     let selectedAgent = '';
+    const strikeContainer = document.getElementById('strikeContainer');
     let strikes = 0;
-    const maxStrikes = 5; // Maximum number of wrong guesses
+    const maxStrikes = 5;
     const submitButton = document.getElementById('submitGuess');
 
     // Function to create agent elements
@@ -24,6 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
             selectAgent(event.target.alt);
         }
     });
+
+    // Function to play the sound file for the current guess
+    const playSound = (guessNumber) => {
+        if (guessNumber < 5) {
+            const soundFileName = agents[dailyAgent].sounds[guessNumber];
+            if (soundFileName) {
+                const soundPath = `static/agents/${dailyAgent}/${soundFileName}`;
+                console.log("Playing sound:", soundPath);
+                agentSound.src = soundPath;
+                agentSound.play().catch(e => console.error("Error playing sound:", e));
+            } else {
+                console.error("Sound file not found for guess number", guessNumber);
+            }
+        }
+    };
 
     // Function to handle agent selection
     const selectAgent = (name) => {
@@ -50,19 +66,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener for the submit button
     submitButton.addEventListener('click', () => {
-        const correctAgent = document.getElementById('dailyAgent').getElementsByTagName('img')[0].alt;
+        const correctAgent = dailyAgent;
+        console.log("Strikes are now ", strikes);
         if (selectedAgent) {
             if (selectedAgent === correctAgent) {
                 updateStrikes(true);
-                alert('YOU WIN!'); // Or update the DOM with a winning message
-                endGame(); // Call endGame function
+                alert('YOU WIN!');
+                endGame();
             } else {
                 updateStrikes(false);
                 document.querySelector(`img[alt="${selectedAgent}"]`).classList.add('greyscale');
+                playSound(strikes+1);
                 strikes++;
                 if (strikes >= maxStrikes) {
-                    alert('Game Over!'); // Or update the DOM with a game over message
-                    endGame(); // Call endGame function
+                    alert('Game Over!');
+                    endGame();
                 }
             }
         } else {
@@ -82,4 +100,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Assuming 'agents' is a global variable injected by Flask containing agent names
     //loadAgents();
+    playSound(0);
 });

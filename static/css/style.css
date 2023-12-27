@@ -35,7 +35,9 @@ h2 {
 
 #mediaContainer {
     flex: 1;
-    max-width: 60%;
+    max-width: 50%;
+    border: 12px solid #fd4655; /* Add border to media container */
+    padding: 10px; /* Optional padding for visual appeal */
 }
 
 #mediaContainer img,
@@ -49,6 +51,8 @@ h2 {
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
     gap: 10px;
     justify-content: center;
+    border: 6px solid #fd4655; /* Add border to agent grid */
+    padding: 10px; /* Optional padding for visual appeal */
 }
 
 .agent {

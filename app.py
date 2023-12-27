@@ -10,7 +10,10 @@ def index():
     agent_directory = os.path.join(app.static_folder, 'agents')  
 
     agents = {
-        agent: os.listdir(os.path.join(agent_directory, agent))[0]
+        agent: {
+            'icon': next(f for f in sorted(os.listdir(os.path.join(agent_directory, agent))) if f.endswith(('.png', '.jpg', '.jpeg', '.gif'))),
+            'sounds': sorted(f for f in os.listdir(os.path.join(agent_directory, agent)) if f.endswith('.mp3'))
+        }
         for agent in os.listdir(agent_directory)
         if os.path.isdir(os.path.join(agent_directory, agent))
     }
@@ -26,7 +29,8 @@ def index():
 
     daily_agent = random.choice(list(agents.keys()))
     print(f"Todays agent is: {daily_agent}")
-    return render_template('index.html', agents=agents, daily_agent=daily_agent)
+    
+    return render_template('index.html', agents=agents, daily_agent=daily_agent, server_time=now)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,28 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FOOTDLE</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
+    <script>
+        var dailyAgent = "{{ daily_agent }}";
+        var agents = JSON.parse('{{ agents | tojson | safe }}');
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>   
+
     <h1>FOOTDLE</h1>
     <div id="dailyAgent">
-        <img src="{{ url_for('static', filename='agents/' + daily_agent + '/' + agents[daily_agent]) }}" alt="{{ daily_agent }}">
-    </div>
-    <h2>GameArea</h2>
+        <p>The daily agent is {{ daily_agent }}</p>
+    </div>    
     <div id="gameArea">
         <div id="mediaContainer">
             <!-- Placeholder for image or video -->
             <img id="gameImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Guess the Agent">
-            <audio id="agentFootsteps" controls>
-                <source src="{{ url_for('static', filename='sound1.mp3') }}" type="audio/mpeg">
+            <audio id="agentSound" controls>
+                <source src="" type="audio/mpeg">
                 Your browser does not support the audio element.
-            </audio>
+            </audio>            
         </div>
+        
         <div id="agentGrid">
-            {% for agent_name, image_file in agents.items() %}
-                <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + image_file) }}" alt="{{ agent_name }}">
+            {% for agent_name, agent_data in agents.items() %}
+                <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + agent_data['icon']) }}" alt="{{ agent_name }}">
             {% endfor %}
-        </div>        
+        </div>                
     </div>
+
     <div id="strikeContainer">
         <div class="strike empty"></div>
         <div class="strike empty"></div>
@@ -34,10 +42,45 @@
         <div class="strike empty"></div>
         <div class="strike empty"></div>
     </div>
+
     <button id="submitGuess">Submit Guess</button>
+
+    <!-- Countdown timer stuff-->
+    <div id="serverTime" style="display:none;">{{ server_time }}</div>
+    <div id="countdownTimer">
+        Time until next quiz: <span id="timeLeft"></span>
+    </div>
     <script>
-        var agents = JSON.parse('{{agents | tojson}}');
+        function updateCountdown() {
+            const serverTimeElement = document.getElementById('serverTime');
+            const serverTime = new Date(serverTimeElement.innerText);
+    
+            // Add one day to the server time and reset hours, minutes, and seconds to 0
+            const nextQuizTime = new Date(serverTime);
+            nextQuizTime.setDate(serverTime.getDate() + 1);
+            nextQuizTime.setHours(0, 0, 0, 0);
+    
+            // Get current time on the client
+            const now = new Date();
+    
+            // Calculate the difference
+            const diff = nextQuizTime - now;
+    
+            // Convert the difference into hours, minutes, and seconds
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+    
+            // Update the countdown timer on the page
+            document.getElementById('timeLeft').innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+    
+        // Update the countdown every second
+        setInterval(updateCountdown, 1000);
+    
+        // Initial update
+        updateCountdown();
     </script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>    
+    
 </body>
 </html>
