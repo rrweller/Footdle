@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to create agent elements
     const loadAgents = () => {
-        agents.forEach(agentName => {
+        console.log(agents);
+        Object.keys(agents).forEach(agentName => {
             const agentElem = document.createElement('img');
             agentElem.src = `static/agents/${agentName}/${agentName}.png`;
             agentElem.alt = agentName;

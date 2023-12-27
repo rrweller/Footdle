@@ -26,8 +26,11 @@
                 <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + image_file) }}" alt="{{ agent_name }}">
             {% endfor %}
         </div>        
-    </div>    
-    <button id="submitGuess">Submit Guess</button>  
+    </div>
+    <button id="submitGuess">Submit Guess</button>
+    <script>
+        var agents = JSON.parse('{{agents | tojson}}');
+    </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>    
 </body>
 </html>
