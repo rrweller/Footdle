@@ -85,7 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             alert('Please select an agent before submitting.');
         }
-    });    
+    });
+    
+    // Agent right-click mark handler
+    const handleAgentRightClick = (event) => {
+        event.preventDefault(); // Prevent the default context menu
+        if (event.target.classList.contains('agent')) {
+            event.target.classList.toggle('agent-marked');
+        }
+    };
+    agentGrid.addEventListener('contextmenu', handleAgentRightClick);
 
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
@@ -93,6 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
             agent.removeEventListener('click', handleAgentClick);
             agent.style.pointerEvents = 'none';
         });
+
+        // Set daily agent's image and name in the result modal
+        const dailyAgentImage = document.getElementById('dailyAgentImage');
+        const dailyAgentName = document.getElementById('dailyAgentName');
+
+        // Assuming the agent's icon image file is named in a standard format like 'agent.png'
+        dailyAgentImage.src = `static/agents/${dailyAgent}/${dailyAgent}.png`;
+        dailyAgentName.textContent = `The daily agent was: ${dailyAgent}`;
     
         // Use the same logic as in updateCountdown to calculate the exact expiration time
         const serverTimeElement = document.getElementById('serverTime');

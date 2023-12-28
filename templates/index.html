@@ -15,10 +15,7 @@
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>      
 
-    <h1>FOOTDLE</h1>
-    <div id="dailyAgent">
-        <p>The daily agent is {{ daily_agent }}</p>
-    </div>    
+    <h1>STEPDLE</h1>  
     <div id="gameArea">
         <div id="mediaContainer">
             <img id="gameImage" src="" alt="Map">
@@ -30,9 +27,12 @@
         
         <div id="agentGrid">
             {% for agent_name, agent_data in agents.items() %}
-                <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + agent_data['icon']) }}" alt="{{ agent_name }}">
+                <div class="agent-container">
+                    <img class="agent" src="{{ url_for('static', filename='agents/' + agent_name + '/' + agent_data['icon']) }}" alt="{{ agent_name }}">
+                    <div class="agent-marked"></div>
+                </div>
             {% endfor %}
-        </div>                
+        </div>               
     </div>
 
     <div id="strikeContainer">
@@ -54,12 +54,18 @@
     <!-- Result Modal -->
     <div id="resultModal" class="modal">
         <div class="modal-content">
-        <h2 id="resultTitle">Quiz Result</h2>
-        <p id="resultMessage"></p>
-        <div id="modalStrikeContainer">
-          </div>
-        <p id="nextQuizMessage"></p>
+            <h2 id="resultTitle">Result</h2>
+            <p id="resultMessage"></p>
+    
+            <div id="dailyAgentResult">
+                <img id="dailyAgentImage" src="" alt="Daily Agent" style="width: 100px; height: 100px;">
+                <p id="dailyAgentName">The daily agent was: </p>
+            </div>
+    
+            <div id="modalStrikeContainer"></div>
+            <p id="nextQuizMessage"></p>
         </div>
     </div>
+    
 </body>
 </html>

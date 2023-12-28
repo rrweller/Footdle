@@ -1,8 +1,6 @@
 @font-face {
     font-family: 'VALORANT Font';
     src: url('Valorant Font.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
 
 body {
@@ -18,27 +16,24 @@ h1 {
     font-family: 'VALORANT Font', sans-serif;
     font-size: 7em;
     color: #fd4655;
-}
-
-h2 {
-    font-size: 2em;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 #gameArea {
     display: grid;
     max-width: 50%;
-    min-width: 75%;
+    min-width: 80%;
     margin: auto;
-    grid-template-columns: 75% 25%;
+    grid-template-columns: 72% 28%;
     align-items: stretch;
     gap: 20px;
     padding: 20px;
 }
 
 #mediaContainer {
-    flex: 1;
-    border: 12px solid #fd4655; /* Add border to media container */
-    padding: 4px; /* Optional padding for visual appeal */
+    border: 12px solid #fd4655;
+    padding: 0px;
 }
 
 #mediaContainer img,
@@ -50,25 +45,36 @@ h2 {
 #agentGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    justify-content: center;
-    border: 6px solid #fd4655; /* Add border to agent grid */
-    padding: 10px; /* Optional padding for visual appeal */
+    align-items: flex-start;
+    border: 8px solid #fd4655;
+}
+
+.agent-container {
+    display: flex;
+    margin: 8px;
+    margin-bottom: 0px;
 }
 
 .agent {
     width: 100%;
-    height: auto;
-    object-fit: cover;
     cursor: pointer;
-    border: 2px solid transparent;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
+    border-radius: 50%;  /* Makes the image circular */
+    border: 4px solid #fd4655; /* Change to the desired width and color of the border */
 }
 
 .agent.selected {
-    border: 2px solid #007bff;
+    border: 4px solid #f7f451;
+}
+
+/*This is for right click marking the agent*/
+.agent-marked {
+    opacity: 0.3;
+}
+
+/*This is for an incorrect guess*/
+.agent.greyscale {
+    pointer-events: none; /* Prevents clicking on the element */
+    filter: grayscale(100%) sepia(200%) hue-rotate(-55deg) saturate(500%) brightness(0.6);
 }
 
 #strikeContainer {
@@ -82,12 +88,15 @@ h2 {
     height: 30px;
     border-radius: 50%;
     margin: 5px;
-    display: inline-flex; /* changed to inline-flex for better control */
+    display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     color: #fff;
-    border: 2px solid #fff; /* optional: adds a border to empty strikes */
+    border: 2px solid #fff;
+    line-height: 1.6;
+    text-align: justify;
+    user-select: none;
 }
 
 .strike.empty {
@@ -102,16 +111,12 @@ h2 {
     background-color: green;
 }
 
-.agent.greyscale {
-    pointer-events: none; /* Prevents clicking on the element */
-    opacity: 0.5; /* Additional visual cue that the agent is no longer selectable */
-}
-
 #submitGuess {
     font-size: 1.2em;
     padding: 10px 20px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 5px;
+    margin-bottom: 20px;
 }
 
 .modal {
@@ -124,16 +129,17 @@ h2 {
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    opacity: 95%;
 }
 
 .modal-content {
     background-color: #121826;
     margin: 10% auto; /* Adjust top margin to center the modal vertically */
     padding: 20px;
-    border: 1px solid #888;
-    width: 40%; /* Adjust width for better mobile responsiveness */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Optional: adds shadow for depth */
+    border: 4px solid #888;
+    width: 30%; /* Adjust width for better mobile responsiveness */
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); /* Optional: adds shadow for depth */
 }
 
 #modalStrikeContainer {
@@ -158,8 +164,23 @@ h2 {
     #agentGrid {
         grid-template-columns: repeat(7, 1fr);
         border: 3px solid #fd4655;
-        max-width: 95%;
+        max-width: 100%;
     }
+
+    .agent-container {
+        display: flex;
+        margin: 8px;
+    }
+
+    .modal-content {
+        background-color: #121826;
+        margin: 10% auto; /* Adjust top margin to center the modal vertically */
+        padding: 20px;
+        border: 4px solid #888;
+        width: 50%; /* Adjust width for better mobile responsiveness */
+        box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); /* Optional: adds shadow for depth */
+    }
+    
 
     h1 {
         font-size: 2em;
