@@ -28,14 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to play the sound file for the current guess
     const playSound = (guessNumber) => {
         if (guessNumber < 5) {
-            const soundFileName = agents[dailyAgent].sounds[guessNumber];
-            if (soundFileName) {
+            const soundFileName = selectedFiles[guessNumber];
+            const mapName = maps[guessNumber];
+            if (soundFileName && mapName) {
                 const soundPath = `static/agents/${dailyAgent}/${soundFileName}`;
+                const imagePath = `static/maps/${mapName}.png`;
                 console.log("Playing sound:", soundPath);
                 agentSound.src = soundPath;
+                document.getElementById('gameImage').src = imagePath; // Update map image
                 agentSound.play().catch(e => console.error("Error playing sound:", e));
             } else {
-                console.error("Sound file not found for guess number", guessNumber);
+                console.error("Sound file or map not found for guess number", guessNumber);
             }
         }
     };

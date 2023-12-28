@@ -10,9 +10,10 @@
 <body>
     <script>
         var dailyAgent = "{{ daily_agent }}";
-        var agents = JSON.parse('{{ agents | tojson | safe }}');
+        var selectedFiles = JSON.parse('{{ selected_files | tojson | safe }}');
+        var maps = JSON.parse('{{ maps | tojson | safe }}');
     </script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>   
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>      
 
     <h1>FOOTDLE</h1>
     <div id="dailyAgent">
@@ -20,8 +21,7 @@
     </div>    
     <div id="gameArea">
         <div id="mediaContainer">
-            <!-- Placeholder for image or video -->
-            <img id="gameImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Guess the Agent">
+            <img id="gameImage" src="" alt="Map">
             <audio id="agentSound" controls>
                 <source src="" type="audio/mpeg">
                 Your browser does not support the audio element.
