@@ -145,6 +145,27 @@ document.addEventListener('DOMContentLoaded', () => {
         nextQuizTime.setDate(serverTime.getDate() + 1);
         nextQuizTime.setHours(0, 0, 0, 0);
 
+        // Stores result data into the server database
+        const quizTakenCheck = getCookie('quizTaken');
+        if (!quizTakenCheck){
+            console.log("Quiz not taken, logging result!")
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/store_quiz_result", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle successful storage here if needed
+                    console.log('Result stored');
+                }
+            };
+            const data = JSON.stringify({
+                "won": won,
+                "attempts": attempts,
+                "dailyAgent": dailyAgent
+            });
+            xhr.send(data);
+        }
+
         // Set the cookie with the game result and attempts to expire at the next quiz time
         document.cookie = `quizTaken=${won ? 'won' : 'lost'}; expires=${nextQuizTime.toUTCString()}; path=/`;
         document.cookie = `strikes=${attempts}; expires=${nextQuizTime.toUTCString()}; path=/`;
