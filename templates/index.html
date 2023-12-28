@@ -15,7 +15,11 @@
     </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>      
 
-    <h1>STEPDLE</h1>  
+    <!-- Start of site content-->
+    <h1>STEPDLE</h1> 
+
+    <button id="howToPlayBtn" class="how-to-play-button">How to Play</button> 
+
     <div id="gameArea">
         <div id="mediaContainer">
             <img id="gameImage" src="" alt="Map">
@@ -51,21 +55,39 @@
         Time until next quiz: <span id="timeLeft"></span>
     </div>
 
+    <!-- How to Play Modal -->
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><strong>Welcome to Stepdle!</strong></h2>
+            <p style="margin-bottom: 40px">This site is a simple daily quiz website aimed at testing your knowledge of VALORANT agents by the sound of their footsteps. A new quiz will be available everyday at midnight GMT.</p>
+            <h3><strong>Instructions:</strong></h3>
+            <ul>
+                <li><strong>Select:</strong> Click the left mouse button on an agent to select them.</li>
+                <li><strong>Submit:</strong> Press the "Submit Guess" button to confirm your choice.</li>
+                <li><strong>Narrow Down:</strong> Right-click on an agent to dim their icon if you think they are not the correct guess.</li>
+                <li><strong>Strikes:</strong> A wrong guess will result in a strike and a new audio clue. Five strikes and the game is over!</li>
+            </ul>
+            <p style="margin-top: 60px; margin-bottom: 20px;">Good luck and have fun!</p>
+        </div>
+    </div>    
+
     <!-- Result Modal -->
     <div id="resultModal" class="modal">
         <div class="modal-content">
-            <h2 id="resultTitle">Result</h2>
-            <p id="resultMessage"></p>
-    
+            <h2 id="resultMessage"></h2>
             <div id="dailyAgentResult">
                 <img id="dailyAgentImage" src="" alt="Daily Agent" style="width: 100px; height: 100px;">
-                <p id="dailyAgentName">The daily agent was: </p>
+                <p id="dailyAgentName"></p>
             </div>
-    
             <div id="modalStrikeContainer"></div>
-            <p id="nextQuizMessage"></p>
+            <p style="margin-top: 40px; margin-bottom: 20px;" id="nextQuizMessage"></p>
         </div>
     </div>
-    
+
+    <!--Background-->
+    <div class="snow">
+        <div></div>
+    </div>
 </body>
 </html>

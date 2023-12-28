@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizTakenCookieValue = getCookie('quizTaken');
     const strikesCookieValue = getCookie('strikes');
 
+    // Snowfall animation stuff
+    function setAnimationHeight() {
+        var windowHeight = window.innerHeight;
+        document.documentElement.style.setProperty('--background-shift', `${windowHeight}px`);
+    }
+    window.addEventListener('resize', setAnimationHeight);
+
     // Agent click handler
     const handleAgentClick = (event) => {
         if (event.target.tagName === 'IMG' && event.target.classList.contains('agent')) {
@@ -56,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };    
 
-    // Function to update strike indicators
+    //---Function to update strike indicators---
     const updateStrikes = (isCorrect) => {
         const strikeElems = document.querySelectorAll('.strike');
         strikeElems[strikes].classList.remove('empty');
@@ -87,14 +94,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Agent right-click mark handler
+    //---Agent right-click mark handler---
     const handleAgentRightClick = (event) => {
         event.preventDefault(); // Prevent the default context menu
         if (event.target.classList.contains('agent')) {
             event.target.classList.toggle('agent-marked');
         }
     };
+
     agentGrid.addEventListener('contextmenu', handleAgentRightClick);
+
+    //---How to play button functionality---
+    document.getElementById('howToPlayBtn').addEventListener('click', function() {
+        document.getElementById('howToPlayModal').style.display = 'block';
+    });
+    
+    // Get the element that closes the modal
+    const closeBtn = document.getElementsByClassName('close')[0];
+    closeBtn.addEventListener('click', function() {
+        document.getElementById('howToPlayModal').style.display = 'none';
+    });
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('howToPlayModal')) {
+            document.getElementById('howToPlayModal').style.display = 'none';
+        }
+    }
 
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
@@ -109,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Assuming the agent's icon image file is named in a standard format like 'agent.png'
         dailyAgentImage.src = `static/agents/${dailyAgent}/${dailyAgent}.png`;
-        dailyAgentName.textContent = `The daily agent was: ${dailyAgent}`;
+        dailyAgentName.textContent = `Today's agent was: ${dailyAgent}`;
     
         // Use the same logic as in updateCountdown to calculate the exact expiration time
         const serverTimeElement = document.getElementById('serverTime');
@@ -128,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultMessage = document.getElementById('resultMessage');
         const nextQuizMessage = document.getElementById('nextQuizMessage');
         
-        resultMessage.textContent = won ? 'Congratulations, you won!' : 'Game Over, try again tomorrow!';
+        resultMessage.textContent = won ? 'YOU WIN!' : 'GAME OVER!';
         // Update the attemptMessage text content to show the number of attempts from the parameter
         nextQuizMessage.textContent = `Next quiz available in 24 hours.`;
         
@@ -191,8 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }    
 
+    setAnimationHeight();
     playSound(0);
-    // Call updateCountdown initially and then set it to update every second
     updateCountdown();
     setInterval(updateCountdown, 1000);
 });

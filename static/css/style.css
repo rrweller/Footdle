@@ -3,19 +3,27 @@
     src: url('Valorant Font.ttf') format('truetype');
 }
 
+:root{
+    --primary-red: #fd4655;
+    --primary-blue: #121826;
+    --primary-yellow: #fdd543;
+    --primary-grey: #BBB5BD;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin: 0;
     padding: 20px;
     color: #ffffff;
-    background-color: #121826;
+    background-color: var(--primary-blue);
+    overflow-x: hidden;
 }
 
 h1 {
     font-family: 'VALORANT Font', sans-serif;
     font-size: 7em;
-    color: #fd4655;
+    color: var(--primary-red);
     margin-bottom: 5px;
     margin-top: 5px;
 }
@@ -32,7 +40,8 @@ h1 {
 }
 
 #mediaContainer {
-    border: 12px solid #fd4655;
+    border: 10px solid var(--primary-red);
+    background-color: var(--primary-blue);
     padding: 0px;
 }
 
@@ -45,25 +54,26 @@ h1 {
 #agentGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    background-color: var(--primary-blue);
     align-items: flex-start;
-    border: 8px solid #fd4655;
+    border: 6px solid var(--primary-red);
 }
 
 .agent-container {
     display: flex;
     margin: 8px;
-    margin-bottom: 0px;
+    margin-top: 10px;
 }
 
 .agent {
     width: 100%;
     cursor: pointer;
-    border-radius: 50%;  /* Makes the image circular */
-    border: 4px solid #fd4655; /* Change to the desired width and color of the border */
+    border-radius: 50%;
+    border: 4px solid var(--primary-red);
 }
 
 .agent.selected {
-    border: 4px solid #f7f451;
+    border: 4px solid var(--primary-yellow);
 }
 
 /*This is for right click marking the agent*/
@@ -73,7 +83,7 @@ h1 {
 
 /*This is for an incorrect guess*/
 .agent.greyscale {
-    pointer-events: none; /* Prevents clicking on the element */
+    pointer-events: none;
     filter: grayscale(100%) sepia(200%) hue-rotate(-55deg) saturate(500%) brightness(0.6);
 }
 
@@ -100,7 +110,7 @@ h1 {
 }
 
 .strike.empty {
-    background-color: #ccc;
+    background-color: var(--primary-grey);
 }
 
 .strike.wrong {
@@ -119,36 +129,133 @@ h1 {
     margin-bottom: 20px;
 }
 
+
+/* Styling for buttons */
+button {
+    font-size: 1em;
+    padding: 10px 20px;
+    background-color: var(--primary-red);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin: 10px 0;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: var(--primary-yellow);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.how-to-play-button {
+    background-color: var(--primary-blue);
+    border: 2px solid var(--primary-red);
+    color: var(--primary-red);
+}
+
+.how-to-play-button:hover {
+    background-color: var(--primary-red);
+    color: #fff;
+}
+
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none; 
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.6);
     opacity: 95%;
 }
 
 .modal-content {
-    background-color: #121826;
-    margin: 10% auto; /* Adjust top margin to center the modal vertically */
-    padding: 20px;
-    border: 4px solid #888;
-    width: 30%; /* Adjust width for better mobile responsiveness */
-    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); /* Optional: adds shadow for depth */
+    background-color: var(--primary-blue);
+    margin: 5% auto;
+    padding: 40px;
+    border: 4px solid var(--primary-grey);
+    width: 40%; /* Adjust width as needed */
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #fff;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 50px;
+    padding-bottom: 0px;
+    padding-top: 20px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 #modalStrikeContainer {
     display: flex;
-    justify-content: center; /* Center the strikes horizontally */
-    align-items: center; /* Align the strikes vertically */
+    justify-content: center;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
-@media (max-width: 900px) {
+.close {
+    color: var(--primary-grey);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--primary-red);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 50 50' style='enable-background:new 0 0 50 50%3B' xml:space='preserve'%3E%3Cstyle type='text/css'%3E.st1%7Bopacity:0.3%3Bfill:%23FFFFFF%3B%7D.st3%7Bopacity:0.1%3Bfill:%23FFFFFF%3B%7D%3C/style%3E%3Ccircle class='st1' cx='5' cy='8' r='1'/%3E%3Ccircle class='st1' cx='38' cy='3' r='1'/%3E%3Ccircle class='st1' cx='12' cy='4' r='1'/%3E%3Ccircle class='st1' cx='16' cy='16' r='1'/%3E%3Ccircle class='st1' cx='47' cy='46' r='1'/%3E%3Ccircle class='st1' cx='32' cy='10' r='1'/%3E%3Ccircle class='st1' cx='3' cy='46' r='1'/%3E%3Ccircle class='st1' cx='45' cy='13' r='1'/%3E%3Ccircle class='st1' cx='10' cy='28' r='1'/%3E%3Ccircle class='st1' cx='22' cy='35' r='1'/%3E%3Ccircle class='st1' cx='3' cy='21' r='1'/%3E%3Ccircle class='st1' cx='26' cy='20' r='1'/%3E%3Ccircle class='st1' cx='30' cy='45' r='1'/%3E%3Ccircle class='st1' cx='15' cy='45' r='1'/%3E%3Ccircle class='st1' cx='34' cy='36' r='1'/%3E%3Ccircle class='st1' cx='41' cy='32' r='1'/%3E%3C/svg%3E");
+    background-position: 0px 0px;
+    /*background-size: 20%, 20%;*/
+    animation: animatedBackground 10s linear infinite;
+}
+
+.snow div {
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 50 50' style='enable-background:new 0 0 50 50%3B' xml:space='preserve'%3E%3Cstyle type='text/css'%3E.st1%7Bopacity:0.7%3Bfill:%23FFFFFF%3B%7D.st3%7Bopacity:0.1%3Bfill:%23FFFFFF%3B%7D%3C/style%3E%3Ccircle class='st3' cx='4' cy='14' r='1'/%3E%3Ccircle class='st3' cx='43' cy='3' r='1'/%3E%3Ccircle class='st3' cx='31' cy='30' r='2'/%3E%3Ccircle class='st3' cx='19' cy='23' r='1'/%3E%3Ccircle class='st3' cx='37' cy='22' r='1'/%3E%3Ccircle class='st3' cx='43' cy='16' r='1'/%3E%3Ccircle class='st3' cx='8' cy='45' r='1'/%3E%3Ccircle class='st3' cx='29' cy='39' r='1'/%3E%3Ccircle class='st3' cx='13' cy='37' r='1'/%3E%3Ccircle class='st3' cx='47' cy='32' r='1'/%3E%3Ccircle class='st3' cx='15' cy='4' r='2'/%3E%3Ccircle class='st3' cx='9' cy='27' r='1'/%3E%3Ccircle class='st3' cx='30' cy='9' r='1'/%3E%3Ccircle class='st3' cx='25' cy='15' r='1'/%3E%3Ccircle class='st3' cx='21' cy='45' r='2'/%3E%3Ccircle class='st3' cx='42' cy='45' r='1'/%3E%3C/svg%3E");
+    background-position: 0px 0px;
+    animation: animatedBackground 15s linear infinite;
+}
+
+@keyframes animatedBackground {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0px var(--background-shift); /* Use a CSS variable */
+    }
+}
+
+@media (max-width: 1500px) {
     #gameArea {
         display: flex;
         flex-wrap: wrap;
@@ -158,12 +265,12 @@ h1 {
     }
 
     #mediaContainer {
-        border: 6px solid #fd4655;
+        border: 6px solid var(--primary-red);
     }
 
     #agentGrid {
         grid-template-columns: repeat(7, 1fr);
-        border: 3px solid #fd4655;
+        border: 3px solid var(--primary-red);
         max-width: 100%;
     }
 
@@ -173,16 +280,46 @@ h1 {
     }
 
     .modal-content {
-        background-color: #121826;
-        margin: 10% auto; /* Adjust top margin to center the modal vertically */
+        background-color: var(--primary-blue);
+        margin: 10% auto;
         padding: 20px;
         border: 4px solid #888;
-        width: 50%; /* Adjust width for better mobile responsiveness */
-        box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2); /* Optional: adds shadow for depth */
+        width: 50%;
+        box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2);
     }
     
 
     h1 {
         font-size: 2em;
     }
+}
+
+h2 {
+    color: var(--primary-red);
+    font-size: 2em;
+    border-bottom: 2px solid var(--primary-red); /* Add a thematic underline */
+    padding-bottom: 10px;
+}
+
+h3 strong{
+    font-size: 1.2em;
+    color: var(--primary-red);
+}
+
+ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0;
+}
+
+p strong {
+    color: var(--primary-red); /* Highlight the key terms */
+}
+
+ul li {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+ul li strong {
+    color: var(--primary-red); /* Highlight the key terms */
 }
