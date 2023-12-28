@@ -4,6 +4,7 @@ import random
 from datetime import datetime, date
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from collections import Counter
 
 app = Flask(__name__)
 
@@ -133,6 +134,23 @@ def store_quiz_result():
         db.session.commit()
 
         return jsonify({"message": "Result stored"}), 200
+    
+@app.route('/quiz_stats')
+def quiz_stats():
+    # Assuming there is only one quiz per day
+    today = date.today()
+    daily_agent_entry = DailyAgent.query.filter_by(date=today).first()
+
+    if daily_agent_entry:
+        results = ClientQuizResult.query.filter_by(daily_agent_id=daily_agent_entry.id).all()
+        attempts_counter = Counter(result.guesses for result in results)
+        total_attempts = sum(attempts_counter.values())
+
+        # Calculate percentages, including the 6th attempt for those who failed
+        percentages = {i: (attempts_counter.get(i, 0) / total_attempts * 100) for i in range(1, 7)}
+        return jsonify(percentages)
+
+    return jsonify({}), 404
 
 if __name__ == '__main__':
     app.run(debug=os.environ.get('FLASK_ENV') == 'development')

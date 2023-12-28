@@ -76,17 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const correctAgent = dailyAgent;
             if (selectedAgent === correctAgent) {
                 updateStrikes(true);
-                endGame(true, strikes + 1);
+                // Correct guess
+                endGame(true, strikes + 1); // Number of attempts is strikes + 1
             } else {
                 updateStrikes(false);
                 const selectedElem = document.querySelector(`img[alt="${selectedAgent}"]`);
                 selectedElem.classList.add('greyscale'); // Mark as guessed and greyed out
                 selectedElem.classList.remove('selected'); // Deselect the agent
                 selectedAgent = ''; // Clear the selected agent variable
-                playSound(strikes + 1);
                 strikes++;
                 if (strikes >= maxStrikes) {
-                    endGame(false, strikes);
+                    // Incorrect final guess
+                    endGame(false, 6); // If they fail on the last guess, record it as 6 attempts
+                } else {
+                    playSound(strikes); // Play next sound if not the final guess
                 }
             }
         } else {
@@ -122,6 +125,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function sendDatabaseResults(quizTakenCheck, won, attempts, dailyAgent){
+        if (!quizTakenCheck){
+            console.log("Quiz not taken, logging result!")
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/store_quiz_result", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle successful storage here if needed
+                    console.log('Result stored');
+                }
+            };
+            const data = JSON.stringify({
+                "won": won,
+                "attempts": attempts,
+                "dailyAgent": dailyAgent
+            });
+            xhr.send(data);
+        }
+    }
+
+    const displayStats = () => {
+        console.log("Fetching and displaying daily quiz stats...")
+        fetch('/quiz_stats')
+            .then(response => response.json())
+            .then(data => {
+                const statsContainer = document.getElementById('statsContainer');
+                statsContainer.innerHTML = ''; // Clear previous stats if any
+    
+                Object.keys(data).forEach(guesses => {
+                    const barContainer = document.createElement('div');
+                    barContainer.classList.add('bar-container');
+
+                    const barText = document.createElement('span');
+                    barText.classList.add('bar-text');
+                    barText.textContent = `${guesses} Attempts - ${data[guesses].toFixed(0)}%`;
+    
+                    const bar = document.createElement('div');
+                    bar.classList.add('bar');
+                    bar.style.width = data[guesses] + '%';
+    
+                    bar.appendChild(barText);
+                    barContainer.appendChild(bar);
+                    statsContainer.appendChild(barContainer);
+                });
+            })
+            .catch(error => console.error('Error fetching quiz stats:', error));
+    };
+
+    // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
         document.querySelectorAll('.agent').forEach(agent => {
@@ -147,24 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Stores result data into the server database
         const quizTakenCheck = getCookie('quizTaken');
-        if (!quizTakenCheck){
-            console.log("Quiz not taken, logging result!")
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/store_quiz_result", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // Handle successful storage here if needed
-                    console.log('Result stored');
-                }
-            };
-            const data = JSON.stringify({
-                "won": won,
-                "attempts": attempts,
-                "dailyAgent": dailyAgent
-            });
-            xhr.send(data);
-        }
+        sendDatabaseResults(quizTakenCheck, won, attempts, dailyAgent)
 
         // Set the cookie with the game result and attempts to expire at the next quiz time
         document.cookie = `quizTaken=${won ? 'won' : 'lost'}; expires=${nextQuizTime.toUTCString()}; path=/`;
@@ -181,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         resultModal.style.display = "block";
         createModalStrikes(attempts, won);
+        displayStats();
     };
 
     if (quizTakenCookieValue) {
@@ -236,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             modalStrikeContainer.appendChild(strikeElem);
         }
-    }    
+    }
 
     setAnimationHeight();
     playSound(0);
