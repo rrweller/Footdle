@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const barText = document.createElement('span');
                     barText.classList.add('bar-text');
-                    barText.textContent = `${guesses} Attempts - ${data[guesses].toFixed(0)}%`;
+                    barText.textContent = `${guesses} Guesses - ${data[guesses].toFixed(0)}%`;
     
                     const bar = document.createElement('div');
                     bar.classList.add('bar');
