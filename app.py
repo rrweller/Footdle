@@ -2,8 +2,22 @@ from flask import Flask, render_template, make_response
 import os
 import random
 import datetime
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
+
+# Environment configuration
+if os.environ.get('FLASK_ENV') == 'production':
+    # Production database (MySQL or PostgreSQL)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+else:
+    # Local development SQLite database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yourlocaldb.sqlite'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
@@ -19,11 +33,10 @@ def index():
     }
 
     now = datetime.datetime.now()
-    seed = now.strftime("%Y%m%d%H%M")
-    random.seed(seed)
+    today = datetime.date.today()
+    random.seed(today.strftime("%Y%m%d"))
 
     daily_agent = random.choice(list(agents.keys()))
-    print(f"Todays agent is: {daily_agent}")
 
     # Get audio files for the selected agent
     agent_sounds = agents[daily_agent]['sounds']
@@ -45,4 +58,4 @@ def index():
     return render_template('index.html', agents=agents, daily_agent=daily_agent, selected_files=selected_files, maps=maps, server_time=now)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_ENV') == 'development')
