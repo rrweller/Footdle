@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.9
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -10,23 +10,11 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-#RUN flask db init
-#RUN flask db migrate
-#RUN flask db upgrade
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
 
-# Define environment variable for the Flask application
+# Define environment variable
 ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-# Update the environment variable to the path where you want the SQLite database to be created
-ENV SQLALCHEMY_DATABASE_URI=sqlite:////usr/src/app/stepdle.db
 
-# Expose port 5000 for the application
-EXPOSE 80
-
-# Copy the entrypoint script into the container
-COPY entrypoint.sh /usr/src/app/entrypoint.sh
-# Make the entrypoint script executable
-RUN chmod +x /usr/src/app/entrypoint.sh
-
-# Use the entrypoint script to initialize the database and start the application
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# Run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
