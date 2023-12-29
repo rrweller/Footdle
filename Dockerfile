@@ -10,7 +10,7 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN flask db ini
+RUN flask db init
 RUN flask db migrate
 RUN flask db upgrade
 
