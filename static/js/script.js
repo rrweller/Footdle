@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return strikesDisplay;
     }
-
+    console.log(dailyAgent);
     // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dailyAgentName = document.getElementById('dailyAgentName');
 
         // Assuming the agent's icon image file is named in a standard format like 'agent.png'
-        dailyAgentImage.src = `static/agents/${dailyAgent}/${dailyAgent}.png`;
+        dailyAgentImage.src = `/static/agents/${dailyAgent}/${dailyAgent}.png`;
         dailyAgentName.textContent = `Today's agent was: ${dailyAgent}`;
     
         // Use the same logic as in updateCountdown to calculate the exact expiration time
