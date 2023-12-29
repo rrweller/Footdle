@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (soundFileName && mapName) {
                 const soundPath = `static/agents/${dailyAgent}/${soundFileName}`;
                 const imagePath = `static/maps/${mapName}.png`;
-                console.log("Playing sound:", soundPath);
+                //console.log("Playing sound:", soundPath);
                 agentSound.src = soundPath;
                 document.getElementById('gameImage').src = imagePath; // Update map image
                 agentSound.play().catch(e => console.error("Error playing sound:", e));
@@ -127,14 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sendDatabaseResults(quizTakenCheck, won, attempts, dailyAgent){
         if (!quizTakenCheck){
-            console.log("Quiz not taken, logging result!")
+            //console.log("Quiz not taken, logging result!")
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/store_quiz_result", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     // Handle successful storage here if needed
-                    console.log('Result stored');
+                    //console.log('Result stored');
                 }
             };
             const data = JSON.stringify({
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const displayStats = () => {
-        console.log("Fetching and displaying daily quiz stats...");
+        //console.log("Fetching and displaying daily quiz stats...");
         fetch('/quiz_stats')
             .then(response => response.json())
             .then(data => {
