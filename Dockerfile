@@ -10,17 +10,19 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Define environment variable
+# Define environment variable for the Flask application
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_ENV=production
-ENV SQLALCHEMY_DATABASE_URI=sqlite:////stepdle.sqlite
+# Update the environment variable to the path where you want the SQLite database to be created
+ENV SQLALCHEMY_DATABASE_URI=sqlite:////usr/src/app/stepdle.db
 
-# Run database migrations
-RUN flask db upgrade
+# Expose port 5000 for the application
+EXPOSE 5000
 
-# Run app.py when the container launches
-CMD ["flask", "run", "--port=80"]
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /usr/src/app/entrypoint.sh
+# Make the entrypoint script executable
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Use the entrypoint script to initialize the database and start the application
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
