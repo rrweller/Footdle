@@ -167,6 +167,21 @@ button:active {
     color: #fff;
 }
 
+.close {
+    color: var(--primary-grey);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--primary-red);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Styling */
 .modal {
     display: none; 
     position: fixed;
@@ -197,11 +212,7 @@ button:active {
     padding-top: 20px;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
+/*Container for the strikes in the endgame modal*/
 #modalStrikeContainer {
     display: flex;
     justify-content: center;
@@ -210,18 +221,9 @@ button:active {
     padding-right: 30px;
 }
 
-.close {
-    color: var(--primary-grey);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: var(--primary-red);
-    text-decoration: none;
-    cursor: pointer;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Styles for the quiz statistics bar graph */
@@ -232,13 +234,12 @@ button:active {
 }
 
 .bar-container {
+    display: flex;
+    align-items: center;
     background-color: var(--primary-grey);
     border-radius: 5px;
-    width: 100%;
     margin: 10px 0;
     padding: 3px;
-    position: relative;
-    justify-content: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -246,22 +247,49 @@ button:active {
     height: 30px;
     border-radius: 3px;
     background-color: var(--primary-red);
-    color: var(--primary-blue);
     line-height: 30px;
     padding: 0 10px;
-    box-sizing: border-box;
     transition: width 0.5s ease-in-out;
     display: flex;
     align-items: center;
+    flex-grow: 1; /* Let the bar grow to fill the container */
+    position: relative; /* Needed for absolute positioning of bar-text */
 }
 
 .bar-text {
-    position: absolute;
-    right: 100%; /* Position the label text after the bar */
-    margin-left: 10px;
+    position: absolute; /* Absolutely position inside the bar */
+    left: 10px; /* Position to the left inside the bar */
     color: #fff;
-    white-space: nowrap; /* Ensure the text doesn't wrap */
     font-weight: bold;
+}
+
+.bar-strikes-display {
+    display: flex;
+    justify-content: flex-end; /* Align strikes to the right */
+    align-items: center;
+    margin-right: 10px; /* Space between strikes and bar */
+}
+
+.bar-strike {
+    display: inline-block;
+    width: 20px; /* Adjusted width */
+    height: 20px; /* Adjusted height */
+    line-height: 20px; /* Adjusted line height to match new size */
+    margin-left: 2px; /* Space between strike indicators */
+    text-align: center;
+    font-size: 12px; /* Smaller font size */
+    border: 1px solid #fff; /* Match the style of existing strike containers */
+    border-radius: 50%; /* Rounded corners */
+    background-color: transparent; /* Start with no background */
+    color: #fff; /* Text color */
+}
+
+.bar-strike.correct {
+    background-color: green;
+}
+
+.bar-strike.incorrect {
+    background-color: red;
 }
 
 /* Snowy background stuffs */

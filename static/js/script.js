@@ -154,17 +154,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statsContainer = document.getElementById('statsContainer');
                 statsContainer.innerHTML = ''; // Clear previous stats if any
     
-                Object.keys(data).forEach(guesses => {
+                Object.keys(data).forEach(attempts => {
                     const barContainer = document.createElement('div');
                     barContainer.classList.add('bar-container');
-
-                    const barText = document.createElement('span');
-                    barText.classList.add('bar-text');
-                    barText.textContent = `${guesses} Guesses - ${data[guesses].toFixed(0)}%`;
+                    const strikesDisplay = createStrikesDisplay(parseInt(attempts));
+                    barContainer.appendChild(strikesDisplay);
     
                     const bar = document.createElement('div');
                     bar.classList.add('bar');
-                    bar.style.width = data[guesses] + '%';
+                    bar.style.width = data[attempts] + '%';
+    
+                    const barText = document.createElement('span');
+                    barText.classList.add('bar-text');
+                    barText.textContent = ` ${data[attempts].toFixed(0)}%`;
     
                     bar.appendChild(barText);
                     barContainer.appendChild(bar);
@@ -173,6 +175,24 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error fetching quiz stats:', error));
     };
+    
+    function createStrikesDisplay(attempts) {
+        const strikesDisplay = document.createElement('div');
+        strikesDisplay.classList.add('bar-strikes-display');
+        for (let i = 1; i <= 6; i++) {
+            const strike = document.createElement('span');
+            strike.classList.add('bar-strike');
+            if (i < attempts) {
+                strike.classList.add('incorrect');
+                strike.textContent = 'X';
+            } else if (i === attempts) {
+                strike.classList.add('correct');
+                strike.textContent = '✓';
+            }
+            strikesDisplay.appendChild(strike);
+        }
+        return strikesDisplay;
+    }    
 
     // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
