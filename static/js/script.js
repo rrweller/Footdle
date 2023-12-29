@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return strikesDisplay;
     }
-    console.log(dailyAgent);
+
     // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
