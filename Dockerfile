@@ -10,6 +10,10 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN flask db ini
+RUN flask db migrate
+RUN flask db upgrade
+
 # Define environment variable for the Flask application
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
