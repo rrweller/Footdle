@@ -84,8 +84,8 @@ def index():
 
     store_daily_agent(daily_agent, selected_files, maps, today)
 
-    server_time = datetime.now()
-    next_quiz_time = (server_time + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    now_utc = datetime.utcnow()
+    next_quiz_time = (now_utc + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
     # Pass it to the template
     return render_template('index.html', 
@@ -94,7 +94,7 @@ def index():
                            daily_agent_image_filename=agent_image_filename, 
                            selected_files=selected_files, 
                            maps=maps, 
-                           server_time=server_time,
+                           server_time=now_utc,
                            next_quiz_time=next_quiz_time)
 
 def store_daily_agent(daily_agent, selected_files, maps, today):

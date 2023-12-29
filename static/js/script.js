@@ -32,6 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     agentGrid.addEventListener('click', handleAgentClick);
 
+    // Function to show the welcome modal
+    function showWelcomeModal() {
+        const welcomeModal = document.getElementById('welcomeModal');
+        welcomeModal.style.display = 'block';
+    }
+
+    // Function to close the welcome modal
+    function closeWelcomeModal() {
+        const welcomeModal = document.getElementById('welcomeModal');
+        welcomeModal.style.display = 'none';
+    }
+
+    // Event listener for the "Let's start!" button
+    document.getElementById('startQuizBtn').addEventListener('click', () => {
+        // Close the welcome modal
+        closeWelcomeModal();
+    
+        // Then play the first sound
+        playSound(0);
+    
+        // Try playing the sound after a slight delay to ensure user interaction is registered
+        setTimeout(() => {
+            agentSound.play().catch(e => console.error("Error playing sound:", e));
+        }, 100);
+    });
+
+    // Check if the quizTaken cookie is set
+    if (!getCookie('quizTaken')) {
+        showWelcomeModal();
+    }
+
     // Function to play the sound file for the current guess
     const playSound = (guessNumber) => {
         if (guessNumber < 5) {
@@ -43,7 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 //console.log("Playing sound:", soundPath);
                 agentSound.src = soundPath;
                 document.getElementById('gameImage').src = imagePath; // Update map image
-                agentSound.play().catch(e => console.error("Error playing sound:", e));
+                if(guessNumber > 0){
+                    agentSound.play().catch(e => console.error("Error playing sound:", e));
+                }
             } else {
                 console.error("Sound file or map not found for guess number", guessNumber);
             }
@@ -199,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return strikesDisplay;
     }
-    console.log(dailyAgent);
+
     // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
         submitButton.disabled = true;
