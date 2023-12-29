@@ -61,6 +61,9 @@ def index():
     daily_agent = random.choice(list(agents.keys()))
     print(f'The daily agent is {daily_agent}')
 
+    # Get the actual file name of the daily agent's image
+    agent_image_filename = agents[daily_agent]['icon']
+
     agent_sounds = agents[daily_agent]['sounds']
     hard_files = [f for f in agent_sounds if 'hard' in f]
     med_files = [f for f in agent_sounds if 'med' in f]
@@ -81,7 +84,14 @@ def index():
 
     store_daily_agent(daily_agent, selected_files, maps, today)
 
-    return render_template('index.html', agents=agents, daily_agent=daily_agent, selected_files=selected_files, maps=maps, server_time=datetime.now())
+    # Pass it to the template
+    return render_template('index.html', 
+                           agents=agents, 
+                           daily_agent=daily_agent, 
+                           daily_agent_image_filename=agent_image_filename, 
+                           selected_files=selected_files, 
+                           maps=maps, 
+                           server_time=datetime.now())
 
 def store_daily_agent(daily_agent, selected_files, maps, today):
     daily_agent_entry = DailyAgent.query.filter_by(date=today).first()

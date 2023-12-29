@@ -208,14 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
             agent.style.pointerEvents = 'none';
         });
 
-        // Set daily agent's image and name in the result modal
+        // Use the passed filename from the server
         const dailyAgentImage = document.getElementById('dailyAgentImage');
         const dailyAgentName = document.getElementById('dailyAgentName');
 
-        // Assuming the agent's icon image file is named in a standard format like 'agent.png'
-        dailyAgentImage.src = `/static/agents/${dailyAgent}/${dailyAgent}.png`;
+        dailyAgentImage.src = `/static/agents/${dailyAgent}/${dailyAgentImageFilename}`;
         dailyAgentName.textContent = `Today's agent was: ${dailyAgent}`;
-    
+        
         // Use the same logic as in updateCountdown to calculate the exact expiration time
         const serverTimeElement = document.getElementById('serverTime');
         const serverTime = new Date(serverTimeElement.innerText);

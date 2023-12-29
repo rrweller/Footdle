@@ -10,6 +10,7 @@
 <body>
     <script>
         var dailyAgent = "{{ daily_agent }}";
+        var dailyAgentImageFilename = "{{ daily_agent_image_filename }}"; // Add this line
         var selectedFiles = JSON.parse('{{ selected_files | tojson | safe }}');
         var maps = JSON.parse('{{ maps | tojson | safe }}');
     </script>
