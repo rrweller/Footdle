@@ -10,9 +10,9 @@ COPY . .
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN flask db init
-RUN flask db migrate
-RUN flask db upgrade
+#RUN flask db init
+#RUN flask db migrate
+#RUN flask db upgrade
 
 # Define environment variable for the Flask application
 ENV FLASK_APP=app.py
@@ -21,7 +21,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV SQLALCHEMY_DATABASE_URI=sqlite:////usr/src/app/stepdle.db
 
 # Expose port 5000 for the application
-EXPOSE 5000
+EXPOSE 80
 
 # Copy the entrypoint script into the container
 COPY entrypoint.sh /usr/src/app/entrypoint.sh
