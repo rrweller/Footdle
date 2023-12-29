@@ -146,8 +146,13 @@ def quiz_stats():
         attempts_counter = Counter(result.guesses for result in results)
         total_attempts = sum(attempts_counter.values())
 
-        # Calculate percentages, including the 6th attempt for those who failed
-        percentages = {i: (attempts_counter.get(i, 0) / total_attempts * 100) for i in range(1, 7)}
+        if total_attempts == 0:
+            # If no attempts were made, return 0% for each possible number of guesses
+            percentages = {i: 0 for i in range(1, 7)}
+        else:
+            # Calculate percentages normally
+            percentages = {i: (attempts_counter.get(i, 0) / total_attempts * 100) for i in range(1, 7)}
+
         return jsonify(percentages)
 
     return jsonify({}), 404
