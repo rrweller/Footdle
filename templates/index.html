@@ -51,7 +51,8 @@
     <button id="submitGuess">Submit Guess</button>
 
     <!-- Countdown timer stuff-->
-    <div id="serverTime" style="display:none;">{{ server_time }}</div>
+    <div id="serverTime" style="display:none;">{{ server_time.isoformat() }}</div>
+    <div id="nextQuizTime" style="display:none;">{{ next_quiz_time.isoformat() }}</div>
     <div id="countdownTimer">
         Time until next quiz: <span id="timeLeft"></span>
     </div>
@@ -62,7 +63,7 @@
             <span class="close">&times;</span>
             <h2><strong>Welcome to Stepdle!</strong></h2>
             <p style="margin-bottom: 40px">This site is a simple daily quiz website aimed at testing your knowledge of VALORANT agents by the sound of their footsteps. A new quiz will be available everyday at midnight GMT.</p>
-            <h3><strong>Instructions:</strong></h3>
+            <h3><strong>Instructions</strong></h3>
             <ul>
                 <li><strong>Select:</strong> Click the left mouse button on an agent to select them.</li>
                 <li><strong>Submit:</strong> Press the "Submit Guess" button to confirm your choice.</li>

@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         dailyAgentImage.src = `/static/agents/${dailyAgent}/${dailyAgentImageFilename}`;
         dailyAgentName.textContent = `Today's agent was: ${dailyAgent}`;
-        
+
         // Use the same logic as in updateCountdown to calculate the exact expiration time
         const serverTimeElement = document.getElementById('serverTime');
         const serverTime = new Date(serverTimeElement.innerText);
@@ -252,19 +252,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Moved updateCountdown into script.js
     function updateCountdown() {
         const serverTimeElement = document.getElementById('serverTime');
+        const nextQuizTimeElement = document.getElementById('nextQuizTime');
+
+        // Parse the server time and the next quiz time from the elements
         const serverTime = new Date(serverTimeElement.innerText);
-    
-        const nextQuizTime = new Date(serverTime);
-        nextQuizTime.setDate(serverTime.getDate() + 1);
-        nextQuizTime.setHours(0, 0, 0, 0);
-    
+        const nextQuizTime = new Date(nextQuizTimeElement.innerText);
+
+        // Calculate the difference in milliseconds between the server's next quiz time and current time
         const now = new Date();
-        const diff = nextQuizTime - now;
-    
+        const diff = nextQuizTime - serverTime + (now - new Date(serverTimeElement.innerText));
+
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
-    
+
         document.getElementById('timeLeft').innerText = `${hours}h ${minutes}m ${seconds}s`;
 
         // Set the cookie expiration to match the next quiz time
