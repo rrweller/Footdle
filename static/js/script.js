@@ -147,52 +147,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const displayStats = () => {
-        console.log("Fetching and displaying daily quiz stats...")
+        console.log("Fetching and displaying daily quiz stats...");
         fetch('/quiz_stats')
             .then(response => response.json())
             .then(data => {
                 const statsContainer = document.getElementById('statsContainer');
                 statsContainer.innerHTML = ''; // Clear previous stats if any
-    
+                
+                // Find the highest percentage
+                let maxPercentage = Math.max(...Object.values(data));
+                
                 Object.keys(data).forEach(attempts => {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('stats-wrapper');
+                    
+                    const strikesDisplay = createStrikesDisplay(parseInt(attempts));
+                    wrapper.appendChild(strikesDisplay);
+                    
                     const barContainer = document.createElement('div');
                     barContainer.classList.add('bar-container');
-                    const strikesDisplay = createStrikesDisplay(parseInt(attempts));
-                    barContainer.appendChild(strikesDisplay);
     
                     const bar = document.createElement('div');
                     bar.classList.add('bar');
-                    bar.style.width = data[attempts] + '%';
-    
+                    // Scale the width based on the highest percentage
+                    let scaledWidth = (data[attempts] / maxPercentage) * 100;
+                    bar.style.width = `${scaledWidth}%`;
+                    
                     const barText = document.createElement('span');
                     barText.classList.add('bar-text');
-                    barText.textContent = ` ${data[attempts].toFixed(0)}%`;
+                    barText.textContent = `${data[attempts].toFixed(0)}%`;
     
-                    bar.appendChild(barText);
                     barContainer.appendChild(bar);
-                    statsContainer.appendChild(barContainer);
+                    bar.appendChild(barText);
+                    wrapper.appendChild(barContainer);
+    
+                    statsContainer.appendChild(wrapper);
                 });
             })
             .catch(error => console.error('Error fetching quiz stats:', error));
-    };
+    };    
     
     function createStrikesDisplay(attempts) {
         const strikesDisplay = document.createElement('div');
-        strikesDisplay.classList.add('bar-strikes-display');
-        for (let i = 1; i <= 6; i++) {
+        strikesDisplay.classList.add('bar-graph-strikes-display');
+        for (let i = 1; i <= maxStrikes; i++) {
             const strike = document.createElement('span');
-            strike.classList.add('bar-strike');
-            if (i < attempts) {
-                strike.classList.add('incorrect');
-                strike.textContent = 'X';
-            } else if (i === attempts) {
-                strike.classList.add('correct');
-                strike.textContent = '✓';
-            }
+            strike.classList.add('bar-graph-strike');
+            strike.textContent = i < attempts ? '✖' : (i === attempts ? '✓' : '');
+            strike.classList.add(i < attempts ? 'incorrect' : (i === attempts ? 'correct' : 'empty'));
             strikesDisplay.appendChild(strike);
         }
         return strikesDisplay;
-    }    
+    }
 
     // END GAME CONDITION
     const endGame = (won = false, attempts = 0) => {
