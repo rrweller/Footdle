@@ -51,18 +51,17 @@
     <button id="submitGuess">Submit Guess</button>
 
     <!-- Countdown timer stuff-->
-    <div id="serverTime" style="display:none;">{{ server_time.isoformat() }}</div>
-    <div id="nextQuizTime" style="display:none;">{{ next_quiz_time.isoformat() }}</div>
+    <div id="serverTime" style="display:none;">{{ server_time }}</div>
     <div id="countdownTimer">
         Time until next quiz: <span id="timeLeft"></span>
     </div>
 
     <!-- Welcome Modal -->
     <div id="welcomeModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 30%;">
             <h2>Welcome to Stepdle!</h2>
             <p>We're excited to have you here. Test your knowledge and have fun!</p>
-            <button id="startQuizBtn" class="how-to-play-button">Let's start!</button>
+            <button id="startQuizBtn" class="how-to-play-button" style="margin: 20px;">Let's start!</button>
         </div>
     </div>
 

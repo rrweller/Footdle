@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import random
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from collections import Counter
@@ -84,9 +84,6 @@ def index():
 
     store_daily_agent(daily_agent, selected_files, maps, today)
 
-    now_utc = datetime.utcnow()
-    next_quiz_time = (now_utc + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-
     # Pass it to the template
     return render_template('index.html', 
                            agents=agents, 
@@ -94,8 +91,7 @@ def index():
                            daily_agent_image_filename=agent_image_filename, 
                            selected_files=selected_files, 
                            maps=maps, 
-                           server_time=now_utc,
-                           next_quiz_time=next_quiz_time)
+                           server_time=datetime.now())
 
 def store_daily_agent(daily_agent, selected_files, maps, today):
     daily_agent_entry = DailyAgent.query.filter_by(date=today).first()
