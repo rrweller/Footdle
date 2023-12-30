@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let strikes = 0;
     const maxStrikes = 5;
 
+    // Retrieve the next quiz time (UTC) from the server
+    const nextQuizTimeISO = document.getElementById('nextQuizTime').innerText;
+    const nextQuizTimeUTC = new Date(nextQuizTimeISO);
+    console.log(nextQuizTimeISO)
+    console.log(nextQuizTimeUTC)
+
     // Helper function to get cookie by name
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -247,22 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         dailyAgentImage.src = `/static/agents/${dailyAgent}/${dailyAgentImageFilename}`;
         dailyAgentName.textContent = `Today's agent was: ${dailyAgent}`;
-        
-        // Use the same logic as in updateCountdown to calculate the exact expiration time
-        const serverTimeElement = document.getElementById('serverTime');
-        const serverTime = new Date(serverTimeElement.innerText);
-        
-        const nextQuizTime = new Date(serverTime);
-        nextQuizTime.setDate(serverTime.getDate() + 1);
-        nextQuizTime.setHours(0, 0, 0, 0);
 
         // Stores result data into the server database
         const quizTakenCheck = getCookie('quizTaken');
         sendDatabaseResults(quizTakenCheck, won, attempts, dailyAgent)
 
         // Set the cookie with the game result and attempts to expire at the next quiz time
-        document.cookie = `quizTaken=${won ? 'won' : 'lost'}; expires=${nextQuizTime.toUTCString()}; path=/`;
-        document.cookie = `strikes=${attempts}; expires=${nextQuizTime.toUTCString()}; path=/`;
+        const expirationUTC = new Date(nextQuizTimeISO);
+        document.cookie = `quizTaken=${won ? 'won' : 'lost'}; expires=${expirationUTC}; path=/`;
+        document.cookie = `strikes=${attempts}; expires=${expirationUTC}; path=/`;
     
         // Show the result modal
         const resultModal = document.getElementById('resultModal');
@@ -271,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         resultMessage.textContent = won ? 'YOU WIN!' : 'GAME OVER!';
         // Update the attemptMessage text content to show the number of attempts from the parameter
-        nextQuizMessage.textContent = `Next quiz available in 24 hours.`;
+        //nextQuizMessage.textContent = `Next quiz available in 24 hours.`;
         
         resultModal.style.display = "block";
         createModalStrikes(attempts, won);
@@ -282,32 +281,32 @@ document.addEventListener('DOMContentLoaded', () => {
         endGame(quizTakenCookieValue === 'won', parseInt(strikesCookieValue));
     }
 
-    // Moved updateCountdown into script.js
+    // Updates the timer
     function updateCountdown() {
-        const serverTimeElement = document.getElementById('serverTime');
-        const serverTime = new Date(serverTimeElement.innerText);
-    
-        const nextQuizTime = new Date(serverTime);
-        nextQuizTime.setDate(serverTime.getDate() + 1);
-        nextQuizTime.setHours(0, 0, 0, 0);
-    
-        const now = new Date();
-        const diff = nextQuizTime - now;
-    
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-    
-        document.getElementById('timeLeft').innerText = `${hours}h ${minutes}m ${seconds}s`;
+        const nowUTC = new Date();  // Current time in UTC
 
-        // Set the cookie expiration to match the next quiz time
-        document.cookie = `quizAvailable=${nextQuizTime.toUTCString()}; expires=${nextQuizTime.toUTCString()}; path=/`;
+        const diff = nextQuizTimeUTC - nowUTC; // Difference in milliseconds
 
-        // If there is a modal on the page, update its countdown as well
+        let hours, minutes, seconds;
+        if (diff > 0) {
+            hours = Math.floor(diff / (1000 * 60 * 60));
+            minutes = Math.floor((diff / (1000 * 60)) % 60);
+            seconds = Math.floor((diff / 1000) % 60);
+        } else {
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        }
+
+        const timeLeftString = `${hours}h ${minutes}m ${seconds}s`;
+        document.getElementById('timeLeft').innerText = timeLeftString;
+
+        // Update the countdown in the result modal as well
         const nextQuizMessage = document.getElementById('nextQuizMessage');
         if (nextQuizMessage) {
-            nextQuizMessage.textContent = `Time until next quiz: ${hours}h ${minutes}m ${seconds}s`;
+            nextQuizMessage.textContent = `Time until next quiz: ${timeLeftString}`;
         }
+        document.getElementById('timeLeft').innerText = `${hours}h ${minutes}m ${seconds}s`;
     }
 
     function createModalStrikes(attempts, won) {

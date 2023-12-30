@@ -24,10 +24,10 @@
     <div id="gameArea">
         <div id="mediaContainer">
             <img id="gameImage" src="" alt="Map">
-            <audio id="agentSound" controls>
+            <video id="agentSound" controls>
                 <source src="" type="audio/mpeg">
                 Your browser does not support the audio element.
-            </audio>            
+            </video>            
         </div>
         
         <div id="agentGrid">
@@ -51,7 +51,7 @@
     <button id="submitGuess">Submit Guess</button>
 
     <!-- Countdown timer stuff-->
-    <div id="serverTime" style="display:none;">{{ server_time }}</div>
+    <div id="nextQuizTime" style="display:none;">{{ next_quiz_time_iso }}</div>
     <div id="countdownTimer">
         Time until next quiz: <span id="timeLeft"></span>
     </div>

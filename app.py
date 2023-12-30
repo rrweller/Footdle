@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import random
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from collections import Counter
@@ -55,8 +55,16 @@ def index():
         if os.path.isdir(os.path.join(agent_directory, agent))
     }
 
-    today = date.today()
+    today = datetime.utcnow().date()
+    print(f"Today is: {today}")
     random.seed(today.strftime("%Y%m%d"))
+
+    # Calculate the start of the next day in UTC
+    server_time_utc = datetime.utcnow()
+    next_day_utc = (server_time_utc + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    print(f"Next day UTC is: {next_day_utc}")
+    next_quiz_time_iso = next_day_utc.isoformat() + 'Z'  # Convert to ISO format
+    print(f"Converted into ISO it is: {next_quiz_time_iso}")
 
     daily_agent = random.choice(list(agents.keys()))
     print(f'The daily agent is {daily_agent}')
@@ -91,7 +99,7 @@ def index():
                            daily_agent_image_filename=agent_image_filename, 
                            selected_files=selected_files, 
                            maps=maps, 
-                           server_time=datetime.now())
+                           next_quiz_time_iso=next_quiz_time_iso)
 
 def store_daily_agent(daily_agent, selected_files, maps, today):
     daily_agent_entry = DailyAgent.query.filter_by(date=today).first()
