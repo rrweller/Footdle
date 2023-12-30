@@ -10,10 +10,6 @@
     --primary-grey: #BBB5BD;
 }
 
-video::-webkit-media-controls{
-    filter: hue-rotate(180deg) brightness(0.9);
-  }
-
 body {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
@@ -49,11 +45,20 @@ h1 {
     padding: 0px;
 }
 
-#mediaContainer img,
-#mediaContainer audio {
+#mediaContainer img {
     width: 100%;
     height: auto;
+    margin: none;
+    padding: none;
 }
+
+#agentSound {
+    filter: hue-rotate(165deg) brightness(0.9);
+    width: 100%;
+    margin: none;
+    padding: none;
+}
+
 
 #agentGrid {
     display: grid;
