@@ -62,9 +62,7 @@ def index():
     # Calculate the start of the next day in UTC
     server_time_utc = datetime.utcnow()
     next_day_utc = (server_time_utc + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-    print(f"Next day UTC is: {next_day_utc}")
     next_quiz_time_iso = next_day_utc.isoformat() + 'Z'  # Convert to ISO format
-    print(f"Converted into ISO it is: {next_quiz_time_iso}")
 
     daily_agent = random.choice(list(agents.keys()))
     print(f'The daily agent is {daily_agent}')

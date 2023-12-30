@@ -9,8 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Retrieve the next quiz time (UTC) from the server
     const nextQuizTimeISO = document.getElementById('nextQuizTime').innerText;
     const nextQuizTimeUTC = new Date(nextQuizTimeISO);
-    console.log(nextQuizTimeISO)
-    console.log(nextQuizTimeUTC)
 
     // Helper function to get cookie by name
     function getCookie(name) {
