@@ -151,6 +151,7 @@ def store_quiz_result():
         db.session.add(new_quiz_result)
         db.session.commit()
 
+        print(f"Stored quiz result from {ip_address}, {attempts} attempts taken")
         return jsonify({"message": "Result stored"}), 200
     
 @app.route('/quiz_stats')
